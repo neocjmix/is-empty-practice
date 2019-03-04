@@ -1,28 +1,44 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
+import React, {useEffect, useState} from 'react';
 import './App.css';
+import search from "./search";
 
-class App extends Component {
-  render() {
+const Beat = beat => ({
+    time: new Date(beat['@timestamp']),
+    message: beat.message,
+});
+
+const update = async (setState, state) => {
+    setState({
+        ...state,
+        beats: (await search({
+            index: 'protologbeat-2019.03.03',
+            query: {
+                match_all: {},
+            }
+        })).map(Beat)
+    })
+}
+
+const App = () => {
+    const [state, setState] = useState(() => ({beats: []}));
+
+    useEffect(() => {
+        const intervalId = setInterval(() => update(setState, state), 3000);
+        return () => clearInterval(intervalId)
+    }, [])
+
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
+        <dl>{
+            state.beats.map(beat =>
+                <React.Fragment key={beat.time.toString()}>
+                    <dt>time</dt>
+                    <dd>{beat.time.toString()}</dd>
+                    <dt>message</dt>
+                    <dd><input type="checkbox" checked={beat.message !== "false"} readOnly/></dd>
+                </React.Fragment>
+            )
+        }</dl>
     );
-  }
 }
 
 export default App;
