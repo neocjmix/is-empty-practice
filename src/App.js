@@ -11,7 +11,7 @@ const update = async (setState, state) => {
     setState({
         ...state,
         beats: (await search({
-            index: 'protologbeat-2019.03.03',
+            index: 'protologbeat-*',
             query: {
                 match_all: {},
             }
