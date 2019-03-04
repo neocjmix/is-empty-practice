@@ -1,7 +1,7 @@
 import elasticsearch from 'elasticsearch-browser'
 
 const client = new elasticsearch.Client({
-    host: 'http://realestate-frank.dkos-lb.9rum.cc:10003',
+    host: 'https://es-frank.dev.daum.net',
     log: 'error'
 });
 

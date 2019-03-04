@@ -23,6 +23,7 @@ const App = () => {
     const [state, setState] = useState(() => ({beats: []}));
 
     useEffect(() => {
+        update(setState, state)
         const intervalId = setInterval(() => update(setState, state), 3000);
         return () => clearInterval(intervalId)
     }, [])
